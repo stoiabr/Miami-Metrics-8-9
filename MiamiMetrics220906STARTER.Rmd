@@ -1,0 +1,116 @@
+---
+title: "Miami Metrics - 9/6/22"
+author: '*your name here*'
+date: "9/6/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+2+2
+```
+
+You can press the green play button in the top right code chunk to run that chunk!
+
+## Libraries and Plotting
+
+R is a programming language, and there are many "packages" you can install in RStudio that will make your life 100x easier when trying to code. Two libraries we'll be using today are *tidyverse* and *ggplot2*. Tidyverse is a library that allows you to manipulate data sets and apply functions to them. Ggplot2 is a package that allows you to visualize data. Ggthemes is another package just to make our graphs look a little nicer! If you are new to R, you will have to install these packages. Run the following command to install and load those libraries (if you are new to R, remove the #, but when you are knitting the document make sure you put them back)
+
+
+```{r, message=FALSE, warning=FALSE}
+# install.packages("tidyverse") # Remove the "#" at the beginning
+# install.packages("ggthemes")  # of the line to run the code!
+# install.packages("maps")
+# install.packages("mapproj")
+# install.packages("ggplot2")   # <- don't remove these ones!
+# <- remove these ones (except for this line!)
+library(tidyverse)
+library(ggplot2)
+library(maps)
+library(ggthemes)
+library(mapproj)
+```
+
+
+We will be using these libraries in our meeting today to introduce data visualization to you. To start, we will be using R to plot our home on a map! Within the ggplot2 library, the function map_data() allows you to get the latitude and longitude of the world. We will be using this to start our project!
+
+```{r}
+usmapdata <- map_data("state")
+```
+
+In the above code, we are telling R that we want a data frame called *usmapdata* and we specify that this data set will contain map_data from the USA. The "<-" is assigning map_data("usa") to usmapdata.
+
+Now we can start the fun part! We are going to create a map of our home state and pinpoint our home on the map. 
+
+```{r}
+ggplot(data=usmapdata, aes(x=long, y=lat, group=group)) +
+  geom_polygon() +
+  coord_map() +
+  theme_map()
+```
+
+This is the code to create a map of the entire United States. We're going to manipulate our data set to our likely. First, we want to make sure we are filtering the data for our state. Let's take a look at the structure of our data.
+
+```{r}
+glimpse(usmapdata)
+```
+
+As you can see, the "region" column is where the states are located. We want this data set to include the state we live in. We have to keep in mind that R is case sensitive, so let's start filtering the data.
+
+```{r, eval=FALSE}
+statedata <- usmapdata %>% 
+  filter(region == "yourstatehere")
+```
+
+In the above code, we are assigning our data *usmapdata* to a new data frame, *statedata*. In tidyverse, the command "%>%" is like saying "and then." We are telling R to assign this usmapdata to statedata AND THEN we are filtering the region column so that our state is the only state. R is case sensitive, so don't forget that when you are typing your state!
+
+Now, we can actually build a graph of our state! We'll be using the same code as before, but because our data set only includes our state, we only see our state on the plot.
+
+```{r, eval=FALSE}
+ggplot(data=statedata, aes(x=long, y=lat, group=group)) +
+  geom_polygon() +
+  coord_map() +
+  theme_map()
+```
+
+Now, it is time to add your home to the graph. This is going to contain a little bit of work! Do you remember when we looked at the structure of the data set and it gave us a latitude and longitude value? We can use this to move forward.
+
+Your task is to go on Google Earth and find your home. In the URL, you are given the exact longitude and latitude of where you live! Using these values, 
+
+
+```{r, eval=FALSE}
+ggplot(data=statedata, aes(x=long, y=lat, group=group)) +
+  geom_polygon() +
+  geom_point(aes(x=-81.7758183, y=41.3931594)) +
+  coord_map() +
+  theme_map()
+```
+
+Congrats! This is a basic plot of your state and your home pinpointed on there. Now, let's just make the graph a little prettier.
+
+
+```{r, eval=FALSE}
+ggplot(data=statedata, aes(x=long, y=lat, group=group)) +
+  geom_polygon(fill="your_color_here") +
+  geom_point(aes(x=#home_longitude#, y=#home_latitude#)) +
+  geom_text(aes(x=#home_longitude#, y=#home_latitude-0.1#), label="Home", size=2) +
+  geom_text(aes(x=#centerofstatelongitude#, y=#centerofstatelatitude#), label="yourstate", size=5) +
+  coord_map() +
+  theme_map() 
+```
+
+We can continue to build on this map! But, for now, congrats on building a graph of your home state and your home!
+
+
+
+
+
