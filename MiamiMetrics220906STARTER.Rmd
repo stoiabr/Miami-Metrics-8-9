@@ -90,7 +90,7 @@ Your task is to go on Google Earth and find your home. In the URL, you are given
 ```{r, eval=FALSE}
 ggplot(data=statedata, aes(x=long, y=lat, group=group)) +
   geom_polygon() +
-  geom_point(aes(x=-81.7758183, y=41.3931594)) +
+  geom_point(aes(x=, y=)) +
   coord_map() +
   theme_map()
 ```
